@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<style>
+			body {
+				display: flex;
+				margin: 0;
+				background:
+					linear-gradient(45deg, #e3add5 25%, transparent 25%),
+					linear-gradient(135deg, #e3add5 25%, transparent 25%),
+					linear-gradient(225deg, #e3add5 25%, transparent 25%),
+					linear-gradient(315deg, #e3add5 25%, transparent 25%);
+				background-size: 4em 4em;
+				background-color: #edb5df;
+				font-family: "RoG2サンセリフStdN";
+				width: 100vw;
+				height: 100vh;
+				overflow: hidden;
+				animation: vertical 4s linear infinite;
+			}
+			#left {
+				width: fit-content;
+			}
+			#text {
+				margin: 2rem 0 0 2rem;
+				background: #fff;
+				border-radius: .5rem;
+				filter: drop-shadow(0 0 .25rem dimgray);
+				border: .3rem #4b3638 solid;
+				padding: .15em .5em;
+				color: #df4c94;
+				font-size: 3.5rem;
+				font-feature-settings: "palt";
+				text-shadow: .2rem .2rem #df4c9460;
+				text-align: justify;
+				line-height: 1.7;
+				width: 30em;
+				height: calc(3.5rem * 1.7 * 12);
+			}
+			#credit {
+				position: absolute;
+				left: .5em;
+				bottom: 0;
+				color: #4b3638;
+				font-size: 3rem;
+			}
+			#metan {
+				position: relative;
+				flex-grow: 1;
+				filter: drop-shadow(0 0 .25rem dimgray);
+			}
+			img {
+				position: absolute;
+				transform-origin: 0 0;
+				transform: scale(.8);
+			}
+			@keyframes vertical {
+				0% {
+					background-position: 0 0;
+				}
+				100% {
+					background-position: 4em 4em;
+				}
+			}
+		</style>
+		<title>2025年度オープンキャンパス作品</title>
+	</head>
+	<body>
+		<div id="text">読み込み中……</div>
+		<div id="credit">VOICEVOX:四国めたん</div>
+		<div id="metan">
+			<img id="body" src="img/metan_body.png">
+			<img id="arms" src="img/metan_arms_normal.png">
+			<img id="mouth" src="img/metan_mouth_n.png">
+			<img id="eyes">
+			<img id="iris" src="img/metan_iris_left.png">
+			<img src="img/metan_hair.png">
+		</div>
+		<script>
+			function changeEyes(eyename) {
+				eyes = eyename;
+				document.getElementById("eyes").src = "img/metan_eyes_" + eyes + ".png";
+			}
+			function closeEyes() {
+				document.getElementById("eyes").src = "img/metan_eyes_close.png";
+				document.getElementById("iris").style.display = "none";
+				blink = setTimeout(openEyes, Math.random() * 50 + 50);
+			}
+			function openEyes() {
+				document.getElementById("eyes").src = "img/metan_eyes_" + eyes + ".png";
+				if (eyes !== "lookup") document.getElementById("iris").style.display = null;
+				blink = setTimeout(closeEyes, Math.random() * 11000 + 4000);
+			}
+			document.getElementById("body").addEventListener("load", () => {
+				for (const element of document.getElementsByTagName("img")) {
+					element.style.left = "calc(50% - " + document.getElementById("body").getBoundingClientRect().width / 2 + "px)";
+					element.style.top = "calc(50% - " + document.getElementById("body").getBoundingClientRect().height / 2 + "px)";
+				}
+			});
+			let eyes;
+			changeEyes("white");
+			let blink = setTimeout(closeEyes, Math.random() * 11000 + 4000);
+		</script>
+	</body>
+</html>
