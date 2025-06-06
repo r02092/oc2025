@@ -9,7 +9,12 @@
   - JavaScript
 - Morisawa Fonts
   - RoG2サンセリフStdN B
+- Python
+  - NumPy
+  - OpenCV
+  - Selenium
 - VOICEVOX
   - 四国めたん
+- Windows
 ## 使用するモデル・素材
 - [四国めたん立ち絵素材](https://nico.ms/im10791276)（[東北ずん子・ずんだもんプロジェクトガイドライン](https://zunko.jp/guideline.html)準拠）
