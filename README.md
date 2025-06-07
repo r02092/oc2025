@@ -7,7 +7,12 @@
   - CSS
   - HTML
   - JavaScript
+- LuaLaTeX
+  - LuaTeX-ja
+  - luacode
+  - Ti*k*Z
 - Morisawa Fonts
+  - A-OTF 隷書101 Std Medium
   - RoG2サンセリフStdN B
 - Python
   - NumPy

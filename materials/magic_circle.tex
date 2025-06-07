@@ -1,0 +1,55 @@
+\documentclass[tikz]{standalone}
+\usepackage{luacode,luatexja-fontspec,tikz}
+\setmainjfont{AOTFReisho101Std}
+\usetikzlibrary{decorations.text}
+\begin{luacode*}
+	function circletext(text,count)
+		for pos,code in utf8.codes(string.rep(text,count)) do
+			tex.sprint("{}"..utf8.char(code))
+		end
+	end
+\end{luacode*}
+\newcommand{\circletext}[2]{
+	\directlua{circletext("#1",#2)}{}%
+}
+\begin{document}
+	\begin{tikzpicture}[even odd rule]
+		% 円
+		\draw[line width=.4cm](0,0)circle[radius=16.6];
+		\draw[line width=.2cm](0,0)circle[radius=16.1];
+		\draw[line width=.6cm,rotate=90,postaction={
+			decorate,decoration={
+				raise=13pt,
+				reverse path,
+				text along path,
+				text={|\fontsize{46pt}{46pt}\selectfont|\circletext{高知工科大学情報学群画像情報工学研究室}{3}||},
+				text align={fit to path}
+			}
+		}](0,0)circle[radius={7.1/sin(30)}];
+		% 六芒星
+		\draw[line width=.3cm](0,{7.1/sin(30)})--({-7.1/tan(30)},{-7.1})--({7.1/tan(30)},{-7.1})--cycle;
+		\draw[line width=.3cm]({-7.1/tan(30)},{7.1})--({7.1/tan(30)},{7.1})--(0,{-7.1/sin(30)})--cycle;
+		% 円
+		\draw[line width=.3cm](0,0)circle[radius=7.1];
+		% 四角形
+		\draw[line width=.2cm](0,{5*sqrt(2)})--({5*sqrt(2)},0)--(0,{-5*sqrt(2)})--({-5*sqrt(2)},0)--cycle;
+		\draw[line width=.2cm](-5,5)--(5,5)--(5,-5)--(-5,-5)--cycle;
+		% 八卦
+		\foreach \i/\bin in {6/{0,0,0},5/{0,0,1},4/{1,0,1},3/{0,1,1},2/{1,1,1},1/{1,1,0},0/{0,1,0},-1/{1,0,0}}
+			\foreach \j in {4.1,3.5,2.9}{
+				\pgfmathparse{array({\bin},(4.1-\j)/.6)}
+				\ifodd\pgfmathresult
+					\draw[line width=.3cm]({\i*45+atan(-1/\j)}:{sqrt(\j^2+(-1)^2)})--({\i*45+atan(1/\j)}:{sqrt(\j^2+1^2)});
+				\else{
+					\draw[line width=.3cm]({\i*45+atan(-1/\j)}:{sqrt(\j^2+(-1)^2)})--({\i*45+atan(-.1/\j)}:{sqrt(\j^2+(-.1)^2)});
+					\draw[line width=.3cm]({\i*45+atan(.1/\j)}:{sqrt(\j^2+.1^2)})--({\i*45+atan(1/\j)}:{sqrt(\j^2+1^2)});
+				}\fi
+			}
+		% 太極図
+		\fill
+			(0,0)circle[radius=2.2]
+			(0,2)arc(90:-90:1)--(0,0)arc(90:270:1)--(0,-2)arc(270:90:2)--cycle
+			(0,1)circle[radius=.25]
+			(0,-1)circle[radius=.25];
+	\end{tikzpicture}
+\end{document}
