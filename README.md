@@ -12,7 +12,7 @@
   - luacode
   - Ti*k*Z
 - Morisawa Fonts
-  - A-OTF 隷書101 Std Medium
+  - A P-OTF 隷書101 StdN M
   - RoG2サンセリフStdN B
 - Python
   - NumPy
