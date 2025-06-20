@@ -77,30 +77,6 @@
 			<img id="iris" src="img/metan_iris_left.png">
 			<img src="img/metan_hair.png">
 		</div>
-		<script>
-			function changeEyes(eyename) {
-				eyes = eyename;
-				document.getElementById("eyes").src = "img/metan_eyes_" + eyes + ".png";
-			}
-			function closeEyes() {
-				document.getElementById("eyes").src = "img/metan_eyes_close.png";
-				document.getElementById("iris").style.display = "none";
-				blink = setTimeout(openEyes, Math.random() * 50 + 50);
-			}
-			function openEyes() {
-				document.getElementById("eyes").src = "img/metan_eyes_" + eyes + ".png";
-				if (eyes !== "lookup") document.getElementById("iris").style.display = null;
-				blink = setTimeout(closeEyes, Math.random() * 11000 + 4000);
-			}
-			document.getElementById("body").addEventListener("load", () => {
-				for (const element of document.getElementsByTagName("img")) {
-					element.style.left = "calc(50% - " + document.getElementById("body").getBoundingClientRect().width / 2 + "px)";
-					element.style.top = "calc(50% - " + document.getElementById("body").getBoundingClientRect().height / 2 + "px)";
-				}
-			});
-			let eyes;
-			changeEyes("white");
-			let blink = setTimeout(closeEyes, Math.random() * 11000 + 4000);
-		</script>
+		<script src="main.js"></script>
 	</body>
 </html>

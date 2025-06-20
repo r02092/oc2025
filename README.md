@@ -14,12 +14,16 @@
 - Morisawa Fonts
   - A P-OTF 隷書101 StdN M
   - RoG2サンセリフStdN B
+- Node.js
+- npm
 - Python
   - NumPy
   - OpenCV
   - Selenium
+- TypeScript
 - VOICEVOX
   - 四国めたん
+- webpack
 - Windows
 ## 使用するモデル・素材
 - [四国めたん立ち絵素材](https://nico.ms/im10791276)（[東北ずん子・ずんだもんプロジェクトガイドライン](https://zunko.jp/guideline.html)準拠）

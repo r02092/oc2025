@@ -5,7 +5,7 @@ PORT = 8000
 
 class WebDirHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 	def __init__(self, *args, **kwargs):
-		super().__init__(*args, directory="webui", **kwargs)
+		super().__init__(*args, directory="webui/dist", **kwargs)
 
 def start_http_server():
 	with socketserver.TCPServer(("", PORT), WebDirHTTPRequestHandler) as http_server:
