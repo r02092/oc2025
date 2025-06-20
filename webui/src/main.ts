@@ -52,15 +52,15 @@ document.addEventListener("predict", async () => {
 		vowel: string
 	}[] = [];
 	let time = audioQuery["prePhonemeLength"];
-	for (const accent_phrase of audioQuery["accent_phrases"]) {
-		for (const mora of accent_phrase["moras"]) {
+	for (const accentPhrase of audioQuery["accent_phrases"]) {
+		for (const mora of accentPhrase["moras"]) {
 			if (mora["vowel"] != "cl") lipSyncData.push({
 				time: time * 1000,
 				vowel: mora["vowel"].toLowerCase()
 			});
 			time += mora["consonant_length"] + mora["vowel_length"];
 		}
-		if (accent_phrase["pause_mora"]) time += accent_phrase["pause_mora"]["vowel_length"];
+		if (accentPhrase["pause_mora"]) time += accentPhrase["pause_mora"]["vowel_length"];
 	}
 	lipSyncData.push({
 		time: time * 1000,
