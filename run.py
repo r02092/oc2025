@@ -16,6 +16,8 @@ def main():
 	threading.Thread(target=start_http_server, daemon=True).start()
 	driver = webdriver.Chrome()
 	driver.get("http://localhost:" + str(PORT))
+	while True:
+		""""""
 	driver.quit()
 
 if __name__ == "__main__":

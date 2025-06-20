@@ -16,6 +16,7 @@
   - RoG2サンセリフStdN B
 - Node.js
 - npm
+- Ollama
 - Python
   - NumPy
   - OpenCV
@@ -26,4 +27,5 @@
 - webpack
 - Windows
 ## 使用するモデル・素材
+- [Qwen3-30B-A3B](https://huggingface.co/Qwen/Qwen3-30B-A3B)
 - [四国めたん立ち絵素材](https://nico.ms/im10791276)（[東北ずん子・ずんだもんプロジェクトガイドライン](https://zunko.jp/guideline.html)準拠）
