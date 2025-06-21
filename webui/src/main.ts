@@ -1,4 +1,4 @@
-import ollama from "ollama/browser";
+import {Ollama} from "ollama/browser";
 function changeEyes(eyename: string) {
 	eyes = eyename;
 	(<HTMLImageElement>document.getElementById("eyes")).src = "img/metan_eyes_" + eyes + ".png";
@@ -25,6 +25,7 @@ document.addEventListener("predict", async () => {
 	changeEyes(Math.random() < 0.5 ? "close" : "lookup");
 	if (eyes === "close") clearTimeout(blink);
 	(<HTMLImageElement>document.getElementById("iris")).style.display = "none";
+	const ollama = new Ollama({host: "http://" + process.env.OC2025_OLLAMA_HOSTNAME + ":11434"});
 	const text: string = (await ollama.chat({
 		model: "qwen3:30b-a3b",
 		messages: [{
