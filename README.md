@@ -15,16 +15,16 @@
   - A P-OTF 隷書101 StdN M
   - RoG2サンセリフStdN B
 - Node.js
-- npm
+  - npm
+  - TypeScript
+  - webpack
 - Ollama
 - Python
   - NumPy
   - OpenCV
   - Selenium
-- TypeScript
 - VOICEVOX
   - 四国めたん
-- webpack
 - Windows
 ## 使用するモデル・素材
 - [Qwen3-30B-A3B](https://huggingface.co/Qwen/Qwen3-30B-A3B)
