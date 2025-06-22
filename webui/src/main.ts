@@ -79,7 +79,11 @@ document.addEventListener("predict", async () => {
 	audio.ontimeupdate = () => {
 		function loop() {
 			if (lipSyncData[0].time <= new Date().getTime() - start) (<HTMLImageElement>document.getElementById("mouth")).src = "img/metan_mouth_" + lipSyncData.shift()!.vowel + ".png"
-			if (lipSyncData.length) requestAnimationFrame(loop);
+			if (lipSyncData.length) {
+				requestAnimationFrame(loop);
+			} else {
+				fetch("end_speech");
+			}
 		}
 		const start = new Date().getTime() - audio.currentTime * 1000;
 		loop();
