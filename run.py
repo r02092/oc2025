@@ -1,8 +1,6 @@
 from selenium import webdriver
 import http.server, queue, os, socketserver, subprocess, threading
 
-PORT = 8000
-
 class WebDirHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, directory="webui/dist", **kwargs)
@@ -17,11 +15,12 @@ class WebDirHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 			q.put("end_speech")
 
 def start_http_server():
+	global PORT
 	with socketserver.TCPServer(("", PORT), WebDirHTTPRequestHandler) as http_server:
 		http_server.serve_forever()
 
 def main():
-	global q
+	global PORT, q
 	subprocess.Popen(os.getenv("LOCALAPPDATA") + r"\Programs\VOICEVOX\vv-engine\run")
 	threading.Thread(target=start_http_server, daemon=True).start()
 	driver = webdriver.Chrome()
@@ -30,5 +29,6 @@ def main():
 	driver.quit()
 
 if __name__ == "__main__":
+	PORT = 8000
 	q = queue.Queue()
 	main()
