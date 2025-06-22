@@ -1,7 +1,7 @@
 from selenium import webdriver
 import http.server, queue, os, socketserver, subprocess, threading
 
-class WebDirHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
+class HTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, directory="webui/dist", **kwargs)
 	def do_GET(self):
@@ -16,7 +16,7 @@ class WebDirHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
 def start_http_server():
 	global PORT
-	with socketserver.TCPServer(("", PORT), WebDirHTTPRequestHandler) as http_server:
+	with socketserver.TCPServer(("", PORT), HTTPRequestHandler) as http_server:
 		http_server.serve_forever()
 
 def main():
