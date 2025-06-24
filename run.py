@@ -23,8 +23,11 @@ def main():
 	global PORT, q
 	subprocess.Popen(os.getenv("LOCALAPPDATA") + r"\Programs\VOICEVOX\vv-engine\run")
 	threading.Thread(target=start_http_server, daemon=True).start()
-	driver = webdriver.Chrome()
+	options = webdriver.ChromeOptions()
+	options.add_experimental_option("excludeSwitches", ["enable-automation"])
+	driver = webdriver.Chrome(options=options)
 	driver.get("http://localhost:" + str(PORT))
+	driver.fullscreen_window()
 	q.get()
 	driver.quit()
 
