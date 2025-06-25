@@ -35,7 +35,7 @@ def main():
 	q.get()
 	filenames = ftp.nlst(".")
 	while True:
-		filename = base64.urlsafe_b64encode(random.randrange(0, 2**64).to_bytes(8)).decode("utf-8").rstrip("=") + ".png"
+		filename = base64.urlsafe_b64encode(random.randrange(0, 2 ** 64).to_bytes(8)).decode("utf-8").rstrip("=") + ".png"
 		if filename not in filenames:
 			break
 	ftp.storbinary("STOR " + filename, io.BytesIO(driver.get_screenshot_as_png()))
