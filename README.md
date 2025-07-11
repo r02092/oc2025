@@ -24,6 +24,7 @@
   - NumPy
   - OpenCV
   - Selenium
+  - pySerial
 - VOICEVOX
   - 四国めたん
 - Windows
