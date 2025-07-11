@@ -1,5 +1,6 @@
 import {Ollama} from "ollama/browser";
-function changeEyes(eyename: string) {
+type Eyes = "close" | "lookup" | "white";
+function changeEyes(eyename: Eyes) {
 	eyes = eyename;
 	(<HTMLImageElement>document.getElementById("eyes")).src = "img/metan_eyes_" + eyes + ".png";
 }
@@ -50,7 +51,7 @@ document.addEventListener("predict", async () => {
 	const audioQuery = JSON.parse(audioQueryJson);
 	let lipSyncData: {
 		time: number
-		vowel: string
+		vowel: "a" | "i" | "u" | "e" | "o" | "n" | "cl"
 	}[] = [];
 	let time = audioQuery["prePhonemeLength"];
 	for (const accentPhrase of audioQuery["accent_phrases"]) {
@@ -97,6 +98,6 @@ document.addEventListener("predict", async () => {
 	changeEyes("white");
 	audio.play();
 });
-let eyes: string;
+let eyes: Eyes;
 changeEyes("white");
 let blink = setTimeout(closeEyes, Math.random() * 11000 + 4000);
