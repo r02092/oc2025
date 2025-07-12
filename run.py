@@ -32,7 +32,6 @@ def main():
 	cap = cv2.VideoCapture(0)
 	cap.set(cv2.CAP_PROP_FRAME_WIDTH, 2048)
 	cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1536)
-	cap.set(cv2.CAP_PROP_GAMMA, 255)
 	ret, first_frame = cap.read()
 	lut = (np.arange(256) / 255) ** 2.2 * 255
 	dotenv.load_dotenv()

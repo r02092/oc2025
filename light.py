@@ -5,7 +5,6 @@ ser = serial.Serial("COM3", 9600)
 cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 2048)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1536)
-cap.set(cv2.CAP_PROP_GAMMA, 255)
 imgs = []
 for i in range(4):
 	ser.write(str(i).encode())
