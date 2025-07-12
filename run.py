@@ -38,9 +38,15 @@ def main():
 	ftp = ftplib.FTP(os.getenv("OC2025_FTP_HOSTNAME"))
 	ftp.login(os.getenv("OC2025_FTP_USERNAME"), os.getenv("OC2025_FTP_PASSWORD"))
 	ftp.cwd(os.getenv("OC2025_FTP_DIRECTORY"))
+	count = 0
 	while True:
 		ret, frame = cap.read()
-		if np.abs(frame.astype(np.int16) - first_frame.astype(np.int16)).astype(np.uint8).sum() > 100000000:
+		diff = np.abs(frame.astype(np.int16) - first_frame.astype(np.int16))
+		if diff.max() - diff.min() > 200:
+			count += 1
+		else:
+			count = 0
+		if count > 9:
 			break
 	imgs = []
 	for i in range(4):
