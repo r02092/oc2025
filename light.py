@@ -11,6 +11,7 @@ for i in range(4):
 	time.sleep(.5)
 	ret, frame = cap.read()
 	imgs.append(frame)
+ser.write(b"0")
 img0_inrange = cv2.inRange(cv2.cvtColor(imgs[2], cv2.COLOR_BGR2HSV), (105, 40, 0), (110, 255, 167))
 cv2.imshow("InRange", img0_inrange)
 cv2.waitKey(0)

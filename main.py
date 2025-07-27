@@ -58,6 +58,7 @@ def main():
 		if i == 0:
 			img_nolight = frame
 		imgs.append(cv2.LUT(frame, lut))
+	ser.write(b"0")
 	imgs = np.array(imgs)
 	img_mask = np.sum(np.abs(img_nolight.astype(np.int16) - first_frame.astype(np.int16)), axis=2) > 127
 	imgs = np.clip(imgs[1:] - imgs[0], 0, 255)
