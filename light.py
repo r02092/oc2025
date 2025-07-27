@@ -11,7 +11,7 @@ for i in range(4):
 	time.sleep(.5)
 	ret, frame = cap.read()
 	imgs.append(frame)
-img0_inrange = cv2.inRange(cv2.cvtColor(imgs[0], cv2.COLOR_BGR2HSV), (105, 40, 64), (110, 127, 167))
+img0_inrange = cv2.inRange(cv2.cvtColor(imgs[2], cv2.COLOR_BGR2HSV), (105, 40, 0), (110, 255, 167))
 cv2.imshow("InRange", img0_inrange)
 cv2.waitKey(0)
 (ball_x, ball_y), ball_radius = cv2.minEnclosingCircle(max(cv2.findContours(img0_inrange, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0], key=lambda x: cv2.contourArea(x)))
