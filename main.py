@@ -92,7 +92,7 @@ def main():
 		if valley.size == 0 or valley[0] < 9:
 			continue
 		valley = valley[0] + int((start * 3 + end) / 4)
-		points.append([np.sum(np.clip(y_tilt[start:valley], 0, None)), -np.sum(np.clip(y_tilt[valley:end], None, 0))])
+		points.append([np.sum(np.abs(y_tilt[start:valley])), np.sum(np.abs(y_tilt[valley:end]))])
 		img_show = cv2.circle(img_show, (i, start), 3, (255, 0, 0), -1)
 		img_show = cv2.circle(img_show, (i, valley), 3, (0, 0, 255), -1)
 		img_show = cv2.circle(img_show, (i, end), 3, (0, 255, 0), -1)
