@@ -55,6 +55,8 @@ def main():
 	for i in range(4):
 		ser.write(str(i).encode())
 		time.sleep(.3)
+		if i == 1:
+			time.sleep(.3) # カメラが明るさを調整するのを待つ
 		ret, frame = cap.read()
 		if i == 0:
 			img_nolight = frame
