@@ -23,7 +23,7 @@ function openEyes() {
 	if (eyes !== "lookup") (<HTMLImageElement>document.getElementById("iris")).style.removeProperty("display");
 	blink = setTimeout(closeEyes, Math.random() * 11000 + 4000);
 }
-(<HTMLImageElement>document.getElementById("body")).addEventListener("load", () => {
+window.addEventListener("resize", () => {
 	for (const element of document.querySelectorAll<HTMLElement>("#metan > img")) {
 		element.style.left = "calc(50% - " + (<HTMLImageElement>document.getElementById("body")).getBoundingClientRect().width / 2 + "px)";
 		element.style.top = "calc(50% - " + (<HTMLImageElement>document.getElementById("body")).getBoundingClientRect().height / 2 + "px)";
