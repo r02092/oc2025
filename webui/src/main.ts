@@ -93,7 +93,7 @@ document.addEventListener("predict", async () => {
 		loop();
 		audio.ontimeupdate = null;
 	}
-	(<HTMLImageElement>document.getElementById("text")).innerText = text;
+	(<HTMLElement>document.getElementById("text")).innerText = text;
 	(<HTMLImageElement>document.getElementById("arms")).src = "img/metan_arms_normal.png";
 	(<HTMLImageElement>document.getElementById("mouth")).style.removeProperty("display");
 	(<HTMLImageElement>document.getElementById("iris")).style.removeProperty("display");
