@@ -20,6 +20,9 @@ function openEyes() {
 		element.style.top = "calc(50% - " + (<HTMLImageElement>document.getElementById("body")).getBoundingClientRect().height / 2 + "px)";
 	}
 });
+document.addEventListener("ready", () => {
+	(<HTMLElement>document.getElementById("text")).innerText = "手のひらを上に向けて、指同士の間に隙間が無くなるようにして、手を見せてほしいわ。";
+});
 document.addEventListener("predict", async () => {
 	(<HTMLImageElement>document.getElementById("arms")).src = "img/metan_arms_loading.png";
 	(<HTMLImageElement>document.getElementById("mouth")).style.display = "none";

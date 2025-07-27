@@ -41,6 +41,7 @@ def main():
 	ftp.login(os.getenv("OC2025_FTP_USERNAME"), os.getenv("OC2025_FTP_PASSWORD"))
 	ftp.cwd(os.getenv("OC2025_FTP_DIRECTORY"))
 	count = 0
+	driver.execute_script("document.dispatchEvent(new CustomEvent('ready'))")
 	while True:
 		ret, frame = cap.read()
 		diff = np.abs(frame.astype(np.int16) - first_frame.astype(np.int16))
