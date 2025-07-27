@@ -1,4 +1,5 @@
 import {Ollama} from "ollama/browser";
+import * as THREE from "three";
 type Eyes = "close" | "lookup" | "white";
 declare global {
 	interface DocumentEventMap {
@@ -39,10 +40,49 @@ document.addEventListener("predict", async (e: CustomEvent) => {
 	if (eyes === "close") clearTimeout(blink);
 	(<HTMLImageElement>document.getElementById("iris")).style.display = "none";
 	(<HTMLElement>document.getElementById("message")).innerText = "少し待ってちょうだい。";
-	(<HTMLImageElement>document.getElementById("albedo")).src = "data:image/webp;base64," + e.detail.albedo;
-	(<HTMLImageElement>document.getElementById("normal")).src = "data:image/webp;base64," + e.detail.normal;
+	const albedoUrl = "data:image/webp;base64," + e.detail.albedo;
+	const normalUrl = "data:image/webp;base64," + e.detail.normal;
+	(<HTMLImageElement>document.getElementById("albedo")).src = albedoUrl;
+	(<HTMLImageElement>document.getElementById("normal")).src = normalUrl;
 	(<HTMLImageElement>document.getElementById("albedo")).style.visibility = "visible";
 	(<HTMLImageElement>document.getElementById("normal")).style.visibility = "visible";
+	const width = 640;
+	const height = 480;
+	const renderer = new THREE.WebGLRenderer({
+		canvas: document.getElementsByTagName("canvas")[0]
+	});
+	renderer.setPixelRatio(window.devicePixelRatio);
+	renderer.setSize(width, height, false);
+	const scene = new THREE.Scene();
+	const camera = new THREE.PerspectiveCamera(45, width / height);
+	camera.position.set(0, 0, 7);
+	const loader = new THREE.TextureLoader();
+	const box = new THREE.Mesh(
+		new THREE.BoxGeometry(4, 3, 4),
+		new THREE.MeshPhongMaterial({
+			color: 0xffffff,
+			map: loader.load(albedoUrl),
+			normalMap: loader.load(normalUrl),
+			normalScale: new THREE.Vector2(1, -1)
+		})
+	);
+	scene.background = new THREE.Color(0x7f7f7f);
+	scene.add(box);
+	scene.add(new THREE.AmbientLight(0xffffff));
+	const pointLight = new THREE.PointLight(0xffffff, 99);
+	pointLight.position.set(0, 0, 5);
+	scene.add(pointLight);
+	let count = 0;
+	function tick() {
+		renderer.render(scene, camera);
+		count++;
+		box.rotation.y += .005;
+		pointLight.position.y = 4 * Math.sin(count / 99);
+		requestAnimationFrame(tick);
+	}
+	tick();
+	renderer.render(scene, camera);
+	document.getElementsByTagName("canvas")[0].style.visibility = "visible";
 	(<HTMLElement>document.getElementById("scorev")).innerText = e.detail.score[0];
 	(<HTMLElement>document.getElementById("scorem")).innerText = e.detail.score[1];
 	const ollama = new Ollama({host: "http://" + process.env.OC2025_OLLAMA_HOSTNAME + ":11434"});

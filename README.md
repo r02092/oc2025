@@ -18,6 +18,7 @@
   - npm
   - TypeScript
   - webpack
+  - Three.js
 - Ollama
 - Python
   - NumPy
