@@ -35,7 +35,7 @@ document.addEventListener("ready", () => {
 document.addEventListener("predict", async (e: CustomEvent) => {
 	(<HTMLImageElement>document.getElementById("arms")).src = "img/metan_arms_loading.png";
 	(<HTMLImageElement>document.getElementById("mouth")).style.display = "none";
-	changeEyes(Math.random() < 0.5 ? "close" : "lookup");
+	changeEyes(Math.random() < .5 ? "close" : "lookup");
 	if (eyes === "close") clearTimeout(blink);
 	(<HTMLImageElement>document.getElementById("iris")).style.display = "none";
 	(<HTMLElement>document.getElementById("message")).innerText = "少し待ってちょうだい。";
