@@ -29,14 +29,54 @@
 				filter: drop-shadow(0 0 .25rem dimgray);
 				border: .3rem #4b3638 solid;
 				padding: .15em .5em;
+				height: 55%;
+			}
+			#text, #images > div {
+				border-radius: .5rem;
+				filter: drop-shadow(0 0 .25rem dimgray);
+				border: .3rem #4b3638 solid;
+			}
+			#message {
 				color: #df4c94;
 				font-size: 3.5rem;
 				font-feature-settings: "palt";
-				text-shadow: .2rem .2rem #df4c9460;
+				text-shadow: .21875rem .21875rem #df4c9460;
 				text-align: justify;
 				line-height: 1.7;
 				width: 30em;
-				height: calc(3.5rem * 1.7 * 12);
+				height: 80%;
+			}
+			.score {
+				color: #4b3638;
+				font-size: 2rem;
+				text-shadow: .125rem .125rem #4b363860;
+				height: 10%;
+			}
+			.score > span {
+				color: #df4c94;
+				text-shadow: .125rem .125rem #df4c9460;
+				font-size: 2.5rem;
+			}
+			#images {
+				display: flex;
+				justify-content: space-between;
+				margin: 2.5rem 0 0 2rem;
+			}
+			#images > div {
+				background: #4b3638;
+				width: 34rem;
+			}
+			#images > div > div {
+				color: #fff;
+				font-size: 2rem;
+				text-align: center;
+				line-height: 1.5;
+			}
+			#images > div > div > img {
+				display: block;
+				width: 100%;
+				aspect-ratio: 4 / 3;
+				visibility: hidden;
 			}
 			#credit {
 				position: absolute;
@@ -50,7 +90,7 @@
 				flex-grow: 1;
 				filter: drop-shadow(0 0 .25rem dimgray);
 			}
-			img {
+			#metan > img {
 				position: absolute;
 				transform-origin: 0 0;
 				transform: scale(.8);
@@ -67,7 +107,27 @@
 		<title>2025年度オープンキャンパス作品</title>
 	</head>
 	<body>
-		<div id="text">撮影準備中……</div>
+		<div id="left">
+			<div id="text">
+				<div id="message">撮影準備中……</div>
+				<div class="score">金星丘スコア: <span id="scorev"></span></div>
+				<div class="score">月丘スコア: <span id="scorem"></span></div>
+			</div>
+			<div id="images">
+				<div>
+					<div>反射率（アルベド）</div>
+					<div><img id="albedo"></div>
+				</div>
+				<div>
+					<div>法線マップ</div>
+					<div><img id="normal"></div>
+				</div>
+				<div>
+					<div>法線マップに基づく立体表示</div>
+					<div><canvas></canvas></div>
+				</div>
+			</div>
+		</div>
 		<div id="credit">VOICEVOX:四国めたん</div>
 		<div id="metan">
 			<img id="body" src="img/metan_body.png">

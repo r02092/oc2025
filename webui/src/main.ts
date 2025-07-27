@@ -1,5 +1,14 @@
 import {Ollama} from "ollama/browser";
 type Eyes = "close" | "lookup" | "white";
+declare global {
+	interface DocumentEventMap {
+		"predict": CustomEvent<{
+			albedo: string;
+			normal: string;
+			score: number[];
+		}>;
+	}
+}
 function changeEyes(eyename: Eyes) {
 	eyes = eyename;
 	(<HTMLImageElement>document.getElementById("eyes")).src = "img/metan_eyes_" + eyes + ".png";
@@ -15,20 +24,27 @@ function openEyes() {
 	blink = setTimeout(closeEyes, Math.random() * 11000 + 4000);
 }
 (<HTMLImageElement>document.getElementById("body")).addEventListener("load", () => {
-	for (const element of document.getElementsByTagName("img")) {
+	for (const element of document.querySelectorAll<HTMLElement>("#metan > img")) {
 		element.style.left = "calc(50% - " + (<HTMLImageElement>document.getElementById("body")).getBoundingClientRect().width / 2 + "px)";
 		element.style.top = "calc(50% - " + (<HTMLImageElement>document.getElementById("body")).getBoundingClientRect().height / 2 + "px)";
 	}
 });
 document.addEventListener("ready", () => {
-	(<HTMLElement>document.getElementById("text")).innerText = "手のひらを上に向けて、指同士の間に隙間が無くなるようにして、手を見せてほしいわ。";
+	(<HTMLElement>document.getElementById("message")).innerText = "手のひらを上に向けて、指同士の間に隙間が無くなるようにして、手を見せてほしいわ。";
 });
-document.addEventListener("predict", async () => {
+document.addEventListener("predict", async (e: CustomEvent) => {
 	(<HTMLImageElement>document.getElementById("arms")).src = "img/metan_arms_loading.png";
 	(<HTMLImageElement>document.getElementById("mouth")).style.display = "none";
 	changeEyes(Math.random() < 0.5 ? "close" : "lookup");
 	if (eyes === "close") clearTimeout(blink);
 	(<HTMLImageElement>document.getElementById("iris")).style.display = "none";
+	(<HTMLElement>document.getElementById("message")).innerText = "少し待ってちょうだい。";
+	(<HTMLImageElement>document.getElementById("albedo")).src = "data:image/webp;base64," + e.detail.albedo;
+	(<HTMLImageElement>document.getElementById("normal")).src = "data:image/webp;base64," + e.detail.normal;
+	(<HTMLImageElement>document.getElementById("albedo")).style.visibility = "visible";
+	(<HTMLImageElement>document.getElementById("normal")).style.visibility = "visible";
+	(<HTMLElement>document.getElementById("scorev")).innerText = e.detail.score[0];
+	(<HTMLElement>document.getElementById("scorem")).innerText = e.detail.score[1];
 	const ollama = new Ollama({host: "http://" + process.env.OC2025_OLLAMA_HOSTNAME + ":11434"});
 	const text: string = (await ollama.chat({
 		model: "qwen3:30b-a3b",
@@ -93,7 +109,7 @@ document.addEventListener("predict", async () => {
 		loop();
 		audio.ontimeupdate = null;
 	}
-	(<HTMLElement>document.getElementById("text")).innerText = text;
+	(<HTMLElement>document.getElementById("message")).innerText = text;
 	(<HTMLImageElement>document.getElementById("arms")).src = "img/metan_arms_normal.png";
 	(<HTMLImageElement>document.getElementById("mouth")).style.removeProperty("display");
 	(<HTMLImageElement>document.getElementById("iris")).style.removeProperty("display");

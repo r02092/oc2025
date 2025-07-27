@@ -77,8 +77,6 @@ def main():
 	img_albedo *= img_mask[:, :, None]
 	img_normal *= img_mask[:, :, None]
 	y_tilt = np.nan_to_num(img_normal[:, :, 1] / img_normal[:, :, 0], posinf=1, neginf=-1)
-	img_normal = ((img_normal * .5 + .5) * 255).astype(np.uint8)
-	img_albedo = (img_albedo / np.max(img_albedo) * 255).astype(np.uint8)
 	score = []
 	img_show = img_nolight.copy()
 	for i in range(720):
@@ -99,10 +97,13 @@ def main():
 		img_show = cv2.circle(img_show, (i, valley), 3, (0, 0, 255), -1)
 		img_show = cv2.circle(img_show, (i, end), 3, (0, 255, 0), -1)
 	score = np.array(score)
-	print(np.mean(score, axis=0))
+	img_normal = ((img_normal * .5 + .5) * 255).astype(np.uint8)
+	img_albedo = (img_albedo / np.max(img_albedo) * 255).astype(np.uint8)
+	webp_albedo = base64.b64encode(cv2.imencode(".webp", img_albedo, (cv2.IMWRITE_WEBP_QUALITY, 100))[1]).decode("ascii")
+	webp_normal = base64.b64encode(cv2.imencode(".webp", img_normal, (cv2.IMWRITE_WEBP_QUALITY, 100))[1]).decode("ascii")
 	cv2.imshow("Show", img_show)
 	cv2.waitKey(0)
-	driver.execute_script("document.dispatchEvent(new CustomEvent('predict'))")
+	driver.execute_script("document.dispatchEvent(new CustomEvent('predict', {detail: {albedo: arguments[0], normal: arguments[1], score: arguments[2]}}))", webp_albedo, webp_normal, np.mean(score, axis=0).tolist())
 	q.get()
 	filenames = ftp.nlst(".")
 	while True:
