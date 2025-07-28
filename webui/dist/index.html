@@ -19,8 +19,9 @@
 				overflow: hidden;
 				animation: vertical 4s linear infinite;
 			}
-			#left {
-				width: fit-content;
+			#top {
+				display: flex;
+				height: 41.5rem;
 			}
 			#text {
 				margin: 2rem 0 0 2rem;
@@ -29,7 +30,7 @@
 				filter: drop-shadow(0 0 .25rem dimgray);
 				border: .3rem #4b3638 solid;
 				padding: .15em .5em;
-				height: 55%;
+				height: 39rem;
 			}
 			#text, #images > div {
 				border-radius: .5rem;
@@ -50,6 +51,7 @@
 				color: #4b3638;
 				font-size: 2rem;
 				text-shadow: .125rem .125rem #4b363860;
+				line-height: 1.5;
 				height: 10%;
 			}
 			.score > span {
@@ -60,11 +62,12 @@
 			#images {
 				display: flex;
 				justify-content: space-between;
-				margin: 2.5rem 0 0 2rem;
+				margin: 2.5rem 2rem;
+				width: 100%;
 			}
 			#images > div {
 				background: #4b3638;
-				width: 34rem;
+				width: 50rem;
 			}
 			#images > div > div {
 				color: #fff;
@@ -83,12 +86,13 @@
 				left: .5em;
 				bottom: 0;
 				color: #4b3638;
-				font-size: 3rem;
+				font-size: 2.5rem;
 			}
 			#metan {
 				position: relative;
 				flex-grow: 1;
 				filter: drop-shadow(0 0 .25rem dimgray);
+				height: 100vh;
 			}
 			#metan > img {
 				position: absolute;
@@ -107,11 +111,21 @@
 		<title>2025年度オープンキャンパス作品</title>
 	</head>
 	<body>
-		<div id="left">
-			<div id="text">
-				<div id="message">撮影準備中……</div>
-				<div class="score">金星丘スコア: <span id="scorev"></span></div>
-				<div class="score">月丘スコア: <span id="scorem"></span></div>
+		<div>
+			<div id="top">
+				<div id="text">
+					<div id="message">撮影準備中……</div>
+					<div class="score">金星丘スコア: <span id="scorev"></span></div>
+					<div class="score">月丘スコア: <span id="scorem"></span></div>
+				</div>
+				<div id="metan">
+					<img id="body" src="img/metan_body.png">
+					<img id="arms" src="img/metan_arms_normal.png">
+					<img id="mouth" src="img/metan_mouth_n.png">
+					<img id="eyes">
+					<img id="iris" src="img/metan_iris_left.png">
+					<img src="img/metan_hair.png">
+				</div>
 			</div>
 			<div id="images">
 				<div>
@@ -129,14 +143,6 @@
 			</div>
 		</div>
 		<div id="credit">VOICEVOX:四国めたん</div>
-		<div id="metan">
-			<img id="body" src="img/metan_body.png">
-			<img id="arms" src="img/metan_arms_normal.png">
-			<img id="mouth" src="img/metan_mouth_n.png">
-			<img id="eyes">
-			<img id="iris" src="img/metan_iris_left.png">
-			<img src="img/metan_hair.png">
-		</div>
 		<script src="main.js"></script>
 	</body>
 </html>

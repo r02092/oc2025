@@ -46,8 +46,8 @@ document.addEventListener("predict", async (e: CustomEvent) => {
 	(<HTMLImageElement>document.getElementById("normal")).src = normalUrl;
 	(<HTMLImageElement>document.getElementById("albedo")).style.visibility = "visible";
 	(<HTMLImageElement>document.getElementById("normal")).style.visibility = "visible";
-	const width = 640;
-	const height = 480;
+	const width = 800;
+	const height = 600;
 	const renderer = new THREE.WebGLRenderer({
 		canvas: document.getElementsByTagName("canvas")[0]
 	});
