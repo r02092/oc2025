@@ -85,22 +85,41 @@ document.addEventListener("predict", async (e: CustomEvent) => {
 	document.getElementsByTagName("canvas")[0].style.visibility = "visible";
 	(<HTMLElement>document.getElementById("scorev")).innerText = e.detail.score[0];
 	(<HTMLElement>document.getElementById("scorem")).innerText = e.detail.score[1];
+	const type: number[] = [0, 0];
+	for (let i = 0; i < 2; i++) {
+		if (e.detail.score[i] < (i ? 110000 : 230000)) {
+			type[i] = 0;
+		} else if (e.detail.score[i] < (i ? 150000 : 260000)) {
+			type[i] = 1;
+		} else {
+			type[i] = 2;
+		}
+	}
+	let prompt: string = "/nothink\n手相占いにおいて";
+	for (let i = 0; i < 2; i++) {
+		prompt += "、" + (i ? "金星" : "月") + "丘" + (i && type[0] === type[1] ? "も" : "が");
+		switch (type[i]) {
+			case 0:
+				prompt += "あまり目立た" + (i ? "ない" : "ず");
+				break;
+			case 1:
+				prompt += "目立つけど、少し控えめであ" + (i ? "る" : "り");
+				break;
+			case 2:
+				prompt += "とても目立ってい" + (i ? "る" : "て");
+		}
+	}
+	prompt += `人は、どのような人だと思われるかしら？
+必要に応じて語尾に「かしら」や「わよ」を付けて、必ずタメ口で高飛車な口調で、その人自身に話すように答えてほしいわ。
+ただし、金星丘や月丘などの手相の用語は使わないで、二人称は「アンタ」とし、100文字程度のプレーンテキストで出力して。`
 	const ollama = new Ollama({host: "http://" + process.env.OC2025_OLLAMA_HOSTNAME + ":11434"});
 	const text: string = (await ollama.chat({
 		model: "qwen3:30b-a3b",
 		messages: [{
 			role: "user",
-			content: `/nothink
-必ずタメ口で、必要に応じて語尾に「かしら」や「わよ」を付けて、高飛車な口調で中二病っぽく話してほしいわ。いくつかの例文を以下に示すわね。
-* ……ふふっ。わたくしの家にはテレビもなければ携帯もないわ。
-* あ、悪魔に魂を捧げている……。
-* あとで一食おごりなさいよ。
-* じゃ、そういうことなら早く行きましょう。
-* そう。だから、できるだけ誰にも邪魔されない場所で、他人の声に気付かないほど真剣に戦っているの。
-* ちょっと！？　そう見えてくるからやめてくれない！？
-以上の要件に則ったうえで、高知県について教えて。ただし、100文字程度のプレーンテキストで出力して。`
+			content: prompt
 		}]
-	})).message.content.replace(/^<think>[\S\s]*<\/think>\s*/, "");
+	})).message.content.replace(/^<think>[\S\s]*<\/think>\s*/, "").replace("あんた", "アンタ").replace(/([。？])(かしら|わよ)[。？]/, "$1"); // <think>タグと言葉遣いの修正
 	const paramsAq = new URLSearchParams();
 	paramsAq.append("text", text);
 	paramsAq.append("speaker", "2");
