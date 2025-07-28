@@ -1,5 +1,6 @@
-import {Ollama} from "ollama/browser";
+import * as QRCode from "qrcode";
 import * as THREE from "three";
+import {Ollama} from "ollama/browser";
 type Eyes = "close" | "lookup" | "white";
 declare global {
 	interface DocumentEventMap {
@@ -7,6 +8,9 @@ declare global {
 			albedo: string;
 			normal: string;
 			score: number[];
+		}>,
+		"ss": CustomEvent<{
+			fn: string;
 		}>;
 	}
 }
@@ -175,6 +179,12 @@ document.addEventListener("predict", async (e: CustomEvent) => {
 	if (eyes === "close") blink = setTimeout(closeEyes, Math.random() * 11000 + 4000);
 	changeEyes("white");
 	audio.play();
+});
+document.addEventListener("ss", async (e: CustomEvent) => {
+	(<HTMLImageElement>document.getElementById("qrimg")).src = await QRCode.toDataURL(process.env.OC2025_DOWNLOAD_PATH + e.detail.fn, {
+		scale: 1
+	});
+	(<HTMLElement>document.getElementById("qr")).style.removeProperty("opacity");
 });
 let eyes: Eyes;
 changeEyes("white");

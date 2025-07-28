@@ -19,6 +19,7 @@
   - TypeScript
   - webpack
   - Three.js
+  - node-qrcode
 - Ollama
 - Python
   - NumPy

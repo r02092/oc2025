@@ -45,19 +45,40 @@
 				text-align: justify;
 				line-height: 1.7;
 				width: 30em;
-				height: 80%;
+				height: 50%;
 			}
-			.score {
+			#other {
+				display: flex;
+				justify-content: space-between;
+				height: 50%;
+			}
+			#scores {
+				display: flex;
+				justify-content: flex-end;
+				flex-direction: column;
+				height: 100%;
+			}
+			#scores > div {
 				color: #4b3638;
 				font-size: 2rem;
 				text-shadow: .125rem .125rem #4b363860;
 				line-height: 1.5;
-				height: 10%;
+				margin: 1rem 0 0 0;
 			}
-			.score > span {
+			#scores > div > span {
 				color: #df4c94;
 				text-shadow: .125rem .125rem #df4c9460;
 				font-size: 2.5rem;
+			}
+			#qr {
+				font-size: 1.5rem;
+				text-align: center;
+				text-shadow: .09375rem .09375rem #4b363860;
+				transition: opacity .4s;
+			}
+			#qrimg {
+				image-rendering: pixelated;
+				height: 16rem;
 			}
 			#images {
 				display: flex;
@@ -115,8 +136,16 @@
 			<div id="top">
 				<div id="text">
 					<div id="message">撮影準備中……</div>
-					<div class="score">金星丘スコア: <span id="scorev"></span></div>
-					<div class="score">月丘スコア: <span id="scorem"></span></div>
+					<div id="other">
+						<div id="scores">
+							<div>金星丘スコア: <span id="scorev"></span></div>
+							<div>月丘スコア: <span id="scorem"></span></div>
+						</div>
+						<div id="qr" style="opacity:0">
+							結果をダウンロードできます<br>
+							<img id="qrimg">
+						</div>
+					</div>
 				</div>
 				<div id="metan">
 					<img id="body" src="img/metan_body.png">

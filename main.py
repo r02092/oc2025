@@ -111,6 +111,7 @@ def main():
 		if filename not in filenames:
 			break
 	ftp.storbinary("STOR " + filename, io.BytesIO(driver.get_screenshot_as_png()))
+	driver.execute_script("document.dispatchEvent(new CustomEvent('ss', {detail: {fn: arguments[0]}}))", filename)
 	driver.quit()
 
 if __name__ == "__main__":
