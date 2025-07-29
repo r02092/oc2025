@@ -52,13 +52,18 @@
 				justify-content: space-between;
 				height: 50%;
 			}
+			#note {
+				color: #4b3638;
+				font-size: 1.5rem;
+				text-shadow: .09375rem .09375rem #4b363860;
+			}
 			#scores {
 				display: flex;
 				justify-content: flex-end;
 				flex-direction: column;
 				height: 100%;
 			}
-			#scores > div {
+			#scores > div:not(#note) {
 				color: #4b3638;
 				font-size: 2rem;
 				text-shadow: .125rem .125rem #4b363860;
@@ -138,6 +143,7 @@
 					<div id="message">撮影準備中……</div>
 					<div id="other">
 						<div id="scores">
+							<div id="note">占いの結果はLLMで生成しているため、不自然な口調や言い回しになることがあります。</div>
 							<div>金星丘スコア: <span id="scorev"></span></div>
 							<div>月丘スコア: <span id="scorem"></span></div>
 						</div>
