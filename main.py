@@ -47,7 +47,7 @@ def main():
 		while True:
 			ret, frame = cap.read()
 			diff = np.abs(frame.astype(np.int16) - first_frame.astype(np.int16))
-			if diff.max() - diff.min() > 200:
+			if diff.max() - diff.min() > 160:
 				count += 1
 			else:
 				count = 0
