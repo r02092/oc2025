@@ -165,7 +165,7 @@ document.addEventListener("predict", async (e: CustomEvent) => {
 			if (lipSyncData.length) {
 				requestAnimationFrame(loop);
 			} else {
-				fetch("end_speech");
+				fetch("event/end_speech");
 			}
 		}
 		const start = new Date().getTime() - audio.currentTime * 1000;
@@ -185,6 +185,18 @@ document.addEventListener("ss", async (e: CustomEvent) => {
 		scale: 1
 	});
 	(<HTMLElement>document.getElementById("qr")).style.removeProperty("opacity");
+});
+document.addEventListener("keydown", (e: KeyboardEvent) => {
+	if (e.key === " ") {
+		fetch("event/press_space");
+		document.dispatchEvent(new CustomEvent("ready"));
+		(<HTMLElement>document.getElementById("scorev")).innerText = "";
+		(<HTMLElement>document.getElementById("scorem")).innerText = "";
+		(<HTMLImageElement>document.getElementById("albedo")).style.visibility = "hidden";
+		(<HTMLImageElement>document.getElementById("normal")).style.visibility = "hidden";
+		document.getElementsByTagName("canvas")[0].style.visibility = "hidden";
+		(<HTMLElement>document.getElementById("qr")).style.opacity = "0";
+	}
 });
 let eyes: Eyes;
 changeEyes("white");
