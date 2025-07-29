@@ -101,7 +101,7 @@ document.addEventListener("predict", async (e: CustomEvent) => {
 	}
 	let prompt: string = "/nothink\n手相占いにおいて";
 	for (let i = 0; i < 2; i++) {
-		prompt += "、" + (i ? "金星" : "月") + "丘" + (i && type[0] === type[1] ? "も" : "が");
+		prompt += "、" + (i ? "月" : "金星") + "丘" + (i && type[0] === type[1] ? "も" : "が");
 		switch (type[i]) {
 			case 0:
 				prompt += "あまり目立た" + (i ? "ない" : "ず");
@@ -185,19 +185,27 @@ document.addEventListener("ss", async (e: CustomEvent) => {
 		scale: 1
 	});
 	(<HTMLElement>document.getElementById("qr")).style.removeProperty("opacity");
+	showQr = true;
 });
 document.addEventListener("keydown", (e: KeyboardEvent) => {
 	if (e.key === " ") {
 		fetch("event/press_space");
-		document.dispatchEvent(new CustomEvent("ready"));
-		(<HTMLElement>document.getElementById("scorev")).innerText = "";
-		(<HTMLElement>document.getElementById("scorem")).innerText = "";
-		(<HTMLImageElement>document.getElementById("albedo")).style.visibility = "hidden";
-		(<HTMLImageElement>document.getElementById("normal")).style.visibility = "hidden";
-		document.getElementsByTagName("canvas")[0].style.visibility = "hidden";
-		(<HTMLElement>document.getElementById("qr")).style.opacity = "0";
+		if (showQr) {
+			document.dispatchEvent(new CustomEvent("ready"));
+			(<HTMLElement>document.getElementById("scorev")).innerText = "";
+			(<HTMLElement>document.getElementById("scorem")).innerText = "";
+			(<HTMLImageElement>document.getElementById("albedo")).style.visibility = "hidden";
+			(<HTMLImageElement>document.getElementById("normal")).style.visibility = "hidden";
+			document.getElementsByTagName("canvas")[0].style.visibility = "hidden";
+			(<HTMLElement>document.getElementById("qr")).style.opacity = "0";
+			showQr = false;
+		}
 	}
 });
+document.addEventListener("click", (e: MouseEvent) => {
+	fetch("event/click");
+});
 let eyes: Eyes;
+let showQr: boolean = false;
 changeEyes("white");
 let blink = setTimeout(closeEyes, Math.random() * 11000 + 4000);

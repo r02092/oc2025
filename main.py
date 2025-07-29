@@ -43,16 +43,7 @@ def main():
 	ftp.cwd(os.getenv("OC2025_FTP_DIRECTORY"))
 	driver.execute_script("document.dispatchEvent(new CustomEvent('ready'))")
 	while True:
-		count = 0
-		while True:
-			ret, frame = cap.read()
-			diff = np.abs(frame.astype(np.int16) - first_frame.astype(np.int16))
-			if diff.max() - diff.min() > 160:
-				count += 1
-			else:
-				count = 0
-			if count > 9:
-				break
+		hand = q.get() != "click"
 		imgs = []
 		for i in range(4):
 			ser.write(str(i).encode())
@@ -90,22 +81,25 @@ def main():
 			if end.size == 0 or end[0] < 9:
 				continue
 			end = end[0] + start
-			valley = np.where(y_tilt[int((start * 3 + end) / 4):int((start + end) / 2), i] > .5)[0]
+			valley_origin = int((start * 3 + end if hand else start + end * 3) / 4)
+			valley = np.where((y_tilt[valley_origin:int((start + end) / 2), i] if hand else y_tilt[int((start + end) / 2):valley_origin, i]) > .5)[0]
 			if valley.size == 0 or valley[0] < 9:
 				continue
-			valley = valley[0] + int((start * 3 + end) / 4)
+			valley = valley[0] + valley_origin
 			score.append([np.sum(np.abs(y_tilt[start:valley])), np.sum(np.abs(y_tilt[valley:end]))])
 			img_show = cv2.circle(img_show, (i, start), 3, (255, 0, 0), -1)
 			img_show = cv2.circle(img_show, (i, valley), 3, (0, 0, 255), -1)
 			img_show = cv2.circle(img_show, (i, end), 3, (0, 255, 0), -1)
-		score = np.array(score)
+		score_mean = np.mean(np.array(score), axis=0)
+		if hand:
+			score_mean = score_mean[::-1]
 		img_normal = ((img_normal * .5 + .5) * 255).astype(np.uint8)
 		img_albedo = (img_albedo / np.max(img_albedo) * 255).astype(np.uint8)
 		webp_albedo = base64.b64encode(cv2.imencode(".webp", img_albedo, (cv2.IMWRITE_WEBP_QUALITY, 100))[1]).decode("ascii")
 		webp_normal = base64.b64encode(cv2.imencode(".webp", img_normal, (cv2.IMWRITE_WEBP_QUALITY, 100))[1]).decode("ascii")
 		cv2.imshow("Show", img_show)
-		cv2.waitKey(0)
-		driver.execute_script("document.dispatchEvent(new CustomEvent('predict', {detail: {albedo: arguments[0], normal: arguments[1], score: arguments[2]}}))", webp_albedo, webp_normal, np.mean(score, axis=0).tolist())
+		cv2.waitKey(1)
+		driver.execute_script("document.dispatchEvent(new CustomEvent('predict', {detail: {albedo: arguments[0], normal: arguments[1], score: arguments[2]}}))", webp_albedo, webp_normal, score_mean.tolist())
 		while q.get() != "end_speech":
 			pass
 		filenames = ftp.nlst(".")
@@ -117,6 +111,7 @@ def main():
 		driver.execute_script("document.dispatchEvent(new CustomEvent('ss', {detail: {fn: arguments[0]}}))", filename)
 		while q.get() != "press_space":
 			pass
+		cv2.destroyAllWindows()
 
 if __name__ == "__main__":
 	PORT = 8000
