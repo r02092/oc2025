@@ -72,7 +72,11 @@ def main():
 		y_tilt = np.nan_to_num(img_normal[:, :, 1] / img_normal[:, :, 0], posinf=1, neginf=-1)
 		score = []
 		img_show = img_nolight.copy()
-		for i in range(720):
+		gcx = np.mean(np.where(img_mask)[1])
+		img_show = cv2.line(img_show, (int(gcx / 3), 0), (int(gcx / 3), img_show.shape[0] - 1), (255, 0, 0), 1)
+		img_show = cv2.line(img_show, (int(gcx * 2 / 3), 0), (int(gcx * 2 / 3), img_show.shape[0] - 1), (0, 255, 0), 1)
+		img_show = cv2.line(img_show, (int(gcx), 0), (int(gcx), img_show.shape[0] - 1), (0, 0, 255), 1)
+		for i in range(int(gcx / 3), int(gcx * 2 / 3)):
 			start = np.where(img_mask[:, i])[0]
 			if start.size == 0:
 				continue
@@ -81,15 +85,11 @@ def main():
 			if end.size == 0 or end[0] < 9:
 				continue
 			end = end[0] + start
-			valley_origin = int((start * 3 + end if hand else start + end * 3) / 4)
-			valley = np.where((y_tilt[valley_origin:int((start + end) / 2), i] if hand else y_tilt[int((start + end) / 2):valley_origin, i]) > .5)[0]
-			if valley.size == 0 or valley[0] < 9:
-				continue
-			valley = valley[0] + valley_origin
-			score.append([np.sum(np.abs(y_tilt[start:valley])), np.sum(np.abs(y_tilt[valley:end]))])
+			separate = int((start * 2 + end) / 3) if hand else int((start + end * 2) / 3)
+			score.append([np.sum(np.abs(y_tilt[start:separate])), np.sum(np.abs(y_tilt[separate:end]))])
 			img_show = cv2.circle(img_show, (i, start), 3, (255, 0, 0), -1)
-			img_show = cv2.circle(img_show, (i, valley), 3, (0, 0, 255), -1)
-			img_show = cv2.circle(img_show, (i, end), 3, (0, 255, 0), -1)
+			img_show = cv2.circle(img_show, (i, separate), 3, (0, 255, 0), -1)
+			img_show = cv2.circle(img_show, (i, end), 3, (0, 0, 255), -1)
 		score_mean = np.mean(np.array(score), axis=0)
 		if hand:
 			score_mean = score_mean[::-1]
