@@ -86,10 +86,10 @@ def main():
 		score = []
 		img_show = img_nolight.copy()
 		gcx = np.mean(np.where(img_mask)[1])
-		img_show = cv2.line(img_show, (int(gcx / 3), 0), (int(gcx / 3), img_show.shape[0] - 1), (255, 0, 0), 1)
+		img_show = cv2.line(img_show, (int(gcx / 2), 0), (int(gcx / 2), img_show.shape[0] - 1), (255, 0, 0), 1)
 		img_show = cv2.line(img_show, (int(gcx * 2 / 3), 0), (int(gcx * 2 / 3), img_show.shape[0] - 1), (0, 255, 0), 1)
 		img_show = cv2.line(img_show, (int(gcx), 0), (int(gcx), img_show.shape[0] - 1), (0, 0, 255), 1)
-		for i in range(int(gcx / 3), int(gcx * 2 / 3)):
+		for i in range(int(gcx / 2), int(gcx * 2 / 3)):
 			start = np.where(img_mask[:, i])[0]
 			if start.size == 0:
 				continue
