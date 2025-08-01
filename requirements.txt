@@ -1,4 +1,0 @@
-chromedriver-binary
-numpy
-opencv-python
-selenium
