@@ -55,9 +55,12 @@ def main():
 				img_nolight = frame
 			imgs.append(cv2.LUT(frame, lut))
 		ser.write(b"0")
+		cv2.imwrite("out/img_nolight.png", img_nolight)
+		cv2.imwrite("out/img_nolight_lut.png", imgs[0].astype(np.uint8))
 		imgs = np.array(imgs)
 		img_mask = np.sum(np.abs(img_nolight.astype(np.int16) - first_frame.astype(np.int16)), axis=2) > 127
 		imgs = np.clip(imgs[1:] - imgs[0], 0, 255)
+		cv2.imwrite("out/imgs0.png", imgs[0].astype(np.uint8))
 		light = np.load("light.npy")
 		lightT = light.T
 		g = np.tensordot(imgs.transpose(1, 2, 0, 3), (np.linalg.inv(lightT @ light) @ lightT).T, axes=(2, 0))
@@ -70,6 +73,7 @@ def main():
 		img_albedo *= img_mask[:, :, None]
 		img_normal *= img_mask[:, :, None]
 		y_tilt = np.nan_to_num(img_normal[:, :, 1] / img_normal[:, :, 0], posinf=1, neginf=-1)
+		cv2.imwrite("out/y_tilt.png", np.clip(y_tilt * 127.5 + 127.5, 0, 255).astype(np.uint8))
 		score = []
 		img_show = img_nolight.copy()
 		gcx = np.mean(np.where(img_mask)[1])
@@ -97,8 +101,7 @@ def main():
 		img_albedo = (img_albedo / np.max(img_albedo) * 255).astype(np.uint8)
 		webp_albedo = base64.b64encode(cv2.imencode(".webp", img_albedo, (cv2.IMWRITE_WEBP_QUALITY, 100))[1]).decode("ascii")
 		webp_normal = base64.b64encode(cv2.imencode(".webp", img_normal, (cv2.IMWRITE_WEBP_QUALITY, 100))[1]).decode("ascii")
-		cv2.imshow("Show", img_show)
-		cv2.waitKey(1)
+		cv2.imwrite("out/img_show.png", img_show)
 		driver.execute_script("document.dispatchEvent(new CustomEvent('predict', {detail: {albedo: arguments[0], normal: arguments[1], score: arguments[2]}}))", webp_albedo, webp_normal, score_mean.tolist())
 		while q.get() != "end_speech":
 			pass
