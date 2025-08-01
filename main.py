@@ -41,8 +41,14 @@ def main():
 	ftp = ftplib.FTP(os.getenv("OC2025_FTP_HOSTNAME"))
 	ftp.login(os.getenv("OC2025_FTP_USERNAME"), os.getenv("OC2025_FTP_PASSWORD"))
 	ftp.cwd(os.getenv("OC2025_FTP_DIRECTORY"))
+	failure = False
 	driver.execute_script("document.dispatchEvent(new CustomEvent('ready'))")
 	while True:
+		if failure:
+			driver.execute_script("document.dispatchEvent(new CustomEvent('failure'))")
+			while q.get() != "press_space":
+				pass
+			failure = False
 		hand = q.get() != "click"
 		imgs = []
 		for i in range(4):
@@ -59,6 +65,9 @@ def main():
 		cv2.imwrite("out/img_nolight_lut.png", imgs[0].astype(np.uint8))
 		imgs = np.array(imgs)
 		img_mask = np.sum(np.abs(img_nolight.astype(np.int16) - first_frame.astype(np.int16)), axis=2) > 127
+		if img_mask.sum() < 100000:
+			failure = True
+			continue
 		imgs = np.clip(imgs[1:] - imgs[0], 0, 255)
 		cv2.imwrite("out/imgs0.png", imgs[0].astype(np.uint8))
 		light = np.load("light.npy")
@@ -94,6 +103,9 @@ def main():
 			img_show = cv2.circle(img_show, (i, start), 3, (255, 0, 0), -1)
 			img_show = cv2.circle(img_show, (i, separate), 3, (0, 255, 0), -1)
 			img_show = cv2.circle(img_show, (i, end), 3, (0, 0, 255), -1)
+		if not len(score):
+			failure = True
+			continue
 		score_mean = np.mean(np.array(score), axis=0)
 		if hand:
 			score_mean = score_mean[::-1]

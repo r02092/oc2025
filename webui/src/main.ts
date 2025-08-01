@@ -190,8 +190,8 @@ document.addEventListener("ss", async (e: CustomEvent) => {
 document.addEventListener("keydown", (e: KeyboardEvent) => {
 	if (e.key === " ") {
 		fetch("event/press_space");
+		if (showQr || showError) document.dispatchEvent(new CustomEvent("ready"));
 		if (showQr) {
-			document.dispatchEvent(new CustomEvent("ready"));
 			(<HTMLElement>document.getElementById("scorev")).innerText = "";
 			(<HTMLElement>document.getElementById("scorem")).innerText = "";
 			(<HTMLImageElement>document.getElementById("albedo")).style.visibility = "hidden";
@@ -205,7 +205,12 @@ document.addEventListener("keydown", (e: KeyboardEvent) => {
 document.addEventListener("click", (e: MouseEvent) => {
 	fetch("event/click");
 });
+document.addEventListener("failure", () => {
+	(<HTMLElement>document.getElementById("message")).innerText = "申し訳ないけど、手のひらを認識できなかったわ。";
+	showError = true;
+});
 let eyes: Eyes;
 let showQr: boolean = false;
+let showError: boolean = false;
 changeEyes("white");
 let blink = setTimeout(closeEyes, Math.random() * 11000 + 4000);
