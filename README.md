@@ -12,8 +12,6 @@
   - luacode
   - Ti*k*Z
 - Morisawa Fonts
-  - A P-OTF 隷書101 StdN M
-  - RoG2サンセリフStdN B
 - Node.js
   - npm
   - TypeScript
@@ -27,7 +25,6 @@
   - Selenium
   - pySerial
 - VOICEVOX
-  - 四国めたん
 - Windows
 ## 使用するモデル・素材
 - [Qwen3-30B-A3B](https://huggingface.co/Qwen/Qwen3-30B-A3B)
