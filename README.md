@@ -1,7 +1,14 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/r02092/oc2025/main/materials/logo.svg" width="400"/>
+</p>
+
 # 2025年度オープンキャンパス作品
 - カメラを使って手のひらを撮影し、丘の大きさの情報を画像処理によって得て、それに基づいて手相占いをする
 - 占いを軽量なローカルLLMでおこない、結果をVOICEVOXを使って四国めたんに読み上げさせる
+
+![説明用文書](https://raw.githubusercontent.com/r02092/oc2025/main/materials/print-outline.svg)
 ## 使用するソフト・言語・ライブラリなど
+![構成図](https://raw.githubusercontent.com/r02092/oc2025/main/materials/koseizu.png)
 - Arduino
 - Google Chrome
   - CSS
