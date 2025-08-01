@@ -54,8 +54,6 @@ def main():
 		for i in range(4):
 			ser.write(str(i).encode())
 			time.sleep(.3)
-			if i == 1:
-				time.sleep(.3) # カメラが明るさを調整するのを待つ
 			ret, frame = cap.read()
 			if i == 0:
 				img_nolight = frame
@@ -69,6 +67,10 @@ def main():
 			failure = True
 			continue
 		imgs = np.clip(imgs[1:] - imgs[0], 0, 255)
+		imgs_sum = np.sum(imgs)
+		imgs[0] *= imgs_sum / np.sum(imgs[0]) / 3
+		imgs[1] *= imgs_sum / np.sum(imgs[1]) / 3
+		imgs[2] *= imgs_sum / np.sum(imgs[2]) / 3
 		cv2.imwrite("out/imgs0.png", imgs[0].astype(np.uint8))
 		light = np.load("light.npy")
 		lightT = light.T
