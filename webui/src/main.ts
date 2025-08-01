@@ -208,7 +208,7 @@ document.addEventListener("keydown", (e: KeyboardEvent) => {
 		}
 	}
 });
-document.addEventListener("click", (e: MouseEvent) => {
+document.addEventListener("click", () => {
 	fetch("event/click");
 });
 document.addEventListener("failure", () => {

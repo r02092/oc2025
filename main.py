@@ -126,7 +126,6 @@ def main():
 		driver.execute_script("document.dispatchEvent(new CustomEvent('ss', {detail: {fn: arguments[0]}}))", filename)
 		while q.get() != "press_space":
 			pass
-		cv2.destroyAllWindows()
 
 if __name__ == "__main__":
 	PORT = 8000
