@@ -119,8 +119,8 @@ document.addEventListener("predict", async (e: CustomEvent) => {
 	scene.background = new THREE.Color(0x7f7f7f);
 	scene.add(box);
 	scene.add(new THREE.AmbientLight(0xffffff));
-	const pointLight = new THREE.PointLight(0xffffff, 9);
-	pointLight.position.set(0, 0, 1);
+	const pointLight = new THREE.PointLight(0xffffff, 30);
+	pointLight.position.set(0, 0, 3);
 	scene.add(pointLight);
 	let count = 0;
 	function tick() {
