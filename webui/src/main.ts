@@ -137,9 +137,9 @@ document.addEventListener("predict", async (e: CustomEvent) => {
 	(<HTMLElement>document.getElementById("scorem")).innerText = e.detail.score[1];
 	const type: number[] = [0, 0];
 	for (let i = 0; i < 2; i++) {
-		if (e.detail.score[i] < (i ? 110000 : 230000)) {
+		if (e.detail.score[i] < (i ? 50000 : 110000)) {
 			type[i] = 0;
-		} else if (e.detail.score[i] < (i ? 150000 : 260000)) {
+		} else if (e.detail.score[i] < (i ? 70000 : 150000)) {
 			type[i] = 1;
 		} else {
 			type[i] = 2;
