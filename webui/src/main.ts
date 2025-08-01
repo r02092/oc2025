@@ -104,11 +104,11 @@ document.addEventListener("predict", async (e: CustomEvent) => {
 	renderer.setPixelRatio(window.devicePixelRatio);
 	renderer.setSize(width, height, false);
 	const scene = new THREE.Scene();
-	const camera = new THREE.PerspectiveCamera(45, width / height);
-	camera.position.set(0, 0, 7);
+	const camera = new THREE.OrthographicCamera(-4, 4, 3, -3, 1, 3);
+	camera.position.set(0, 0, 2);
 	const loader = new THREE.TextureLoader();
 	const box = new THREE.Mesh(
-		new THREE.BoxGeometry(4, 3, 4),
+		new THREE.PlaneGeometry(8, 6),
 		new THREE.MeshPhongMaterial({
 			color: 0xffffff,
 			map: loader.load(albedoUrl),
@@ -119,15 +119,15 @@ document.addEventListener("predict", async (e: CustomEvent) => {
 	scene.background = new THREE.Color(0x7f7f7f);
 	scene.add(box);
 	scene.add(new THREE.AmbientLight(0xffffff));
-	const pointLight = new THREE.PointLight(0xffffff, 99);
-	pointLight.position.set(0, 0, 5);
+	const pointLight = new THREE.PointLight(0xffffff, 9);
+	pointLight.position.set(0, 0, 1);
 	scene.add(pointLight);
 	let count = 0;
 	function tick() {
 		renderer.render(scene, camera);
 		count++;
-		box.rotation.y += .005;
-		pointLight.position.y = 4 * Math.sin(count / 99);
+		pointLight.position.x = 2 * Math.cos(count / 50);
+		pointLight.position.y = 2 * Math.sin(count / 50);
 		requestAnimationFrame(tick);
 	}
 	tick();
