@@ -28,6 +28,52 @@ function openEyes() {
 	if (eyes !== "lookup") (<HTMLImageElement>document.getElementById("iris")).style.removeProperty("display");
 	blink = setTimeout(closeEyes, Math.random() * 11000 + 4000);
 }
+async function speak(audioQueryJson: string, audioRes: Response, text: string, sendEvent: boolean = false) {
+	const audioQuery = JSON.parse(audioQueryJson);
+	let lipSyncData: {
+		time: number
+		vowel: "a" | "i" | "u" | "e" | "o" | "n" | "cl"
+	}[] = [];
+	let time = audioQuery["prePhonemeLength"];
+	for (const accentPhrase of audioQuery["accent_phrases"]) {
+		for (const mora of accentPhrase["moras"]) {
+			if (mora["vowel"] != "cl") lipSyncData.push({
+				time: time * 1000,
+				vowel: mora["vowel"].toLowerCase()
+			});
+			time += mora["consonant_length"] + mora["vowel_length"];
+		}
+		if (accentPhrase["pause_mora"]) time += accentPhrase["pause_mora"]["vowel_length"];
+	}
+	lipSyncData.push({
+		time: time * 1000,
+		vowel: "n"
+	});
+	const audio = new Audio(URL.createObjectURL(await (audioRes).blob()));
+	audio.ontimeupdate = () => {
+		function loop() {
+			if (lipSyncData[0].time <= new Date().getTime() - start) (<HTMLImageElement>document.getElementById("mouth")).src = "img/metan_mouth_" + lipSyncData.shift()!.vowel + ".png"
+			if (lipSyncData.length) {
+				requestAnimationFrame(loop);
+			} else if (sendEvent) {
+				fetch("event/end_speech");
+			}
+		}
+		const start = new Date().getTime() - audio.currentTime * 1000;
+		loop();
+		audio.ontimeupdate = null;
+	}
+	(<HTMLElement>document.getElementById("message")).innerText = text;
+	(<HTMLImageElement>document.getElementById("arms")).src = "img/metan_arms_normal.png";
+	(<HTMLImageElement>document.getElementById("mouth")).style.removeProperty("display");
+	(<HTMLImageElement>document.getElementById("iris")).style.removeProperty("display");
+	if (eyes === "close") blink = setTimeout(closeEyes, Math.random() * 11000 + 4000);
+	changeEyes("white");
+	audio.play();
+}
+async function speak_file(fn: string, text: string) {
+	speak(await (await fetch("speak/" + fn + ".json")).text(), await fetch("speak/" + fn + ".wav"), text, false);
+}
 window.addEventListener("resize", () => {
 	for (const element of document.querySelectorAll<HTMLElement>("#metan > img")) {
 		element.style.left = "calc(50% - " + (<HTMLImageElement>document.getElementById("body")).getBoundingClientRect().width / 2 + "px)";
@@ -43,7 +89,7 @@ document.addEventListener("predict", async (e: CustomEvent) => {
 	changeEyes(Math.random() < .5 ? "close" : "lookup");
 	if (eyes === "close") clearTimeout(blink);
 	(<HTMLImageElement>document.getElementById("iris")).style.display = "none";
-	(<HTMLElement>document.getElementById("message")).innerText = "少し待ってちょうだい。";
+	speak_file("please_wait", "少し待ってちょうだい。");
 	const albedoUrl = "data:image/webp;base64," + e.detail.albedo;
 	const normalUrl = "data:image/webp;base64," + e.detail.normal;
 	(<HTMLImageElement>document.getElementById("albedo")).src = albedoUrl;
@@ -130,55 +176,15 @@ document.addEventListener("predict", async (e: CustomEvent) => {
 	const audioQueryJson = await (await fetch("http://localhost:50021/audio_query?" + paramsAq.toString(), {
 		method: "POST"
 	})).text();
-	const audioQuery = JSON.parse(audioQueryJson);
-	let lipSyncData: {
-		time: number
-		vowel: "a" | "i" | "u" | "e" | "o" | "n" | "cl"
-	}[] = [];
-	let time = audioQuery["prePhonemeLength"];
-	for (const accentPhrase of audioQuery["accent_phrases"]) {
-		for (const mora of accentPhrase["moras"]) {
-			if (mora["vowel"] != "cl") lipSyncData.push({
-				time: time * 1000,
-				vowel: mora["vowel"].toLowerCase()
-			});
-			time += mora["consonant_length"] + mora["vowel_length"];
-		}
-		if (accentPhrase["pause_mora"]) time += accentPhrase["pause_mora"]["vowel_length"];
-	}
-	lipSyncData.push({
-		time: time * 1000,
-		vowel: "n"
-	});
 	const paramsSynth = new URLSearchParams();
 	paramsSynth.append("speaker", "2");
-	const audio = new Audio(URL.createObjectURL(await (await fetch("http://localhost:50021/synthesis?" + paramsSynth.toString(), {
+	speak(audioQueryJson, await fetch("http://localhost:50021/synthesis?" + paramsSynth.toString(), {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json"
 		},
 		body: audioQueryJson
-	})).blob()));
-	audio.ontimeupdate = () => {
-		function loop() {
-			if (lipSyncData[0].time <= new Date().getTime() - start) (<HTMLImageElement>document.getElementById("mouth")).src = "img/metan_mouth_" + lipSyncData.shift()!.vowel + ".png"
-			if (lipSyncData.length) {
-				requestAnimationFrame(loop);
-			} else {
-				fetch("event/end_speech");
-			}
-		}
-		const start = new Date().getTime() - audio.currentTime * 1000;
-		loop();
-		audio.ontimeupdate = null;
-	}
-	(<HTMLElement>document.getElementById("message")).innerText = text;
-	(<HTMLImageElement>document.getElementById("arms")).src = "img/metan_arms_normal.png";
-	(<HTMLImageElement>document.getElementById("mouth")).style.removeProperty("display");
-	(<HTMLImageElement>document.getElementById("iris")).style.removeProperty("display");
-	if (eyes === "close") blink = setTimeout(closeEyes, Math.random() * 11000 + 4000);
-	changeEyes("white");
-	audio.play();
+	}), text, true);
 });
 document.addEventListener("ss", async (e: CustomEvent) => {
 	(<HTMLImageElement>document.getElementById("qrimg")).src = await QRCode.toDataURL(process.env.OC2025_DOWNLOAD_PATH + e.detail.fn, {
@@ -206,7 +212,7 @@ document.addEventListener("click", (e: MouseEvent) => {
 	fetch("event/click");
 });
 document.addEventListener("failure", () => {
-	(<HTMLElement>document.getElementById("message")).innerText = "申し訳ないけど、手のひらを認識できなかったわ。";
+	speak_file("failure", "申し訳ないけど、手のひらを認識できなかったわ。");
 	showError = true;
 });
 let eyes: Eyes;
