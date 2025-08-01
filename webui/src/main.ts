@@ -81,7 +81,7 @@ window.addEventListener("resize", () => {
 	}
 });
 document.addEventListener("ready", () => {
-	(<HTMLElement>document.getElementById("message")).innerText = "手のひらを上に向けて、指同士の間に隙間が無くなるようにして、手を見せてほしいわ。";
+	(<HTMLElement>document.getElementById("message")).innerText = "手のひらを上に向けて、指同士の間に隙間が無くなるようにして、手を見せてほしいわ。左手ならクリック、右手ならスペースキーを押して。";
 });
 document.addEventListener("predict", async (e: CustomEvent) => {
 	(<HTMLImageElement>document.getElementById("arms")).src = "img/metan_arms_loading.png";
@@ -191,6 +191,7 @@ document.addEventListener("ss", async (e: CustomEvent) => {
 		scale: 1
 	});
 	(<HTMLElement>document.getElementById("qr")).style.removeProperty("opacity");
+	(<HTMLElement>document.getElementById("spacekey")).style.animation = "blink 1s ease-in-out infinite alternate";
 	showQr = true;
 });
 document.addEventListener("keydown", (e: KeyboardEvent) => {
@@ -204,6 +205,7 @@ document.addEventListener("keydown", (e: KeyboardEvent) => {
 			(<HTMLImageElement>document.getElementById("normal")).style.visibility = "hidden";
 			document.getElementsByTagName("canvas")[0].style.visibility = "hidden";
 			(<HTMLElement>document.getElementById("qr")).style.opacity = "0";
+			(<HTMLElement>document.getElementById("spacekey")).style.removeProperty("animation");
 			showQr = false;
 		}
 	}
@@ -212,7 +214,7 @@ document.addEventListener("click", () => {
 	fetch("event/click");
 });
 document.addEventListener("failure", () => {
-	speak_file("failure", "申し訳ないけど、手のひらを認識できなかったわ。");
+	speak_file("failure", "申し訳ないけど、手のひらを認識できなかったわ。スペースキーを押してから、もう一度手を見せてほしいわ。");
 	showError = true;
 });
 let eyes: Eyes;
