@@ -38,9 +38,6 @@ def main():
 	ret, first_frame = cap.read()
 	lut = (np.arange(256) / 255) ** 2.2 * 255
 	dotenv.load_dotenv()
-	ftp = ftplib.FTP(os.getenv("OC2025_FTP_HOSTNAME"))
-	ftp.login(os.getenv("OC2025_FTP_USERNAME"), os.getenv("OC2025_FTP_PASSWORD"))
-	ftp.cwd(os.getenv("OC2025_FTP_DIRECTORY"))
 	failure = False
 	driver.execute_script("document.dispatchEvent(new CustomEvent('ready'))")
 	while True:
@@ -119,12 +116,20 @@ def main():
 		driver.execute_script("document.dispatchEvent(new CustomEvent('predict', {detail: {albedo: arguments[0], normal: arguments[1], score: arguments[2]}}))", webp_albedo, webp_normal, score_mean.tolist())
 		while q.get() != "end_speech":
 			pass
-		filenames = ftp.nlst(".")
-		while True:
-			filename = base64.urlsafe_b64encode(random.randrange(0, 2 ** 64).to_bytes(8)).decode("utf-8").rstrip("=") + ".png"
-			if filename not in filenames:
-				break
-		ftp.storbinary("STOR " + filename, io.BytesIO(driver.get_screenshot_as_png()))
+		try:
+			ftp = ftplib.FTP(os.getenv("OC2025_FTP_HOSTNAME"))
+			ftp.login(os.getenv("OC2025_FTP_USERNAME"), os.getenv("OC2025_FTP_PASSWORD"))
+			ftp.cwd(os.getenv("OC2025_FTP_DIRECTORY"))
+			filenames = ftp.nlst(".")
+			while True:
+				filename = base64.urlsafe_b64encode(random.randrange(0, 2 ** 64).to_bytes(8)).decode("utf-8").rstrip("=") + ".png"
+				if filename not in filenames:
+					break
+			ftp.storbinary("STOR " + filename, io.BytesIO(driver.get_screenshot_as_png()))
+			ftp.quit()
+		except ftplib.all_errors as e:
+			print(e)
+			filename = "error"
 		driver.execute_script("document.dispatchEvent(new CustomEvent('ss', {detail: {fn: arguments[0]}}))", filename)
 		while q.get() != "press_space":
 			pass
