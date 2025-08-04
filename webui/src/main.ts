@@ -1,7 +1,7 @@
 import * as QRCode from "qrcode";
 import * as THREE from "three";
 import {Ollama} from "ollama/browser";
-type Eyes = "close" | "lookup" | "white";
+type Eyes = "close" | "lookup" | "open";
 declare global {
 	interface DocumentEventMap {
 		"predict": CustomEvent<{
@@ -20,12 +20,10 @@ function changeEyes(eyename: Eyes) {
 }
 function closeEyes() {
 	(<HTMLImageElement>document.getElementById("eyes")).src = "img/metan_eyes_close.png";
-	(<HTMLImageElement>document.getElementById("iris")).style.display = "none";
 	blink = setTimeout(openEyes, Math.random() * 50 + 50);
 }
 function openEyes() {
 	(<HTMLImageElement>document.getElementById("eyes")).src = "img/metan_eyes_" + eyes + ".png";
-	if (eyes !== "lookup") (<HTMLImageElement>document.getElementById("iris")).style.removeProperty("display");
 	blink = setTimeout(closeEyes, Math.random() * 11000 + 4000);
 }
 async function speak(audioQueryJson: string, audioRes: Response, text: string, sendEvent: boolean = false) {
@@ -57,6 +55,8 @@ async function speak(audioQueryJson: string, audioRes: Response, text: string, s
 				requestAnimationFrame(loop);
 			} else if (sendEvent) {
 				fetch("event/end_speech");
+			} else if ((<HTMLImageElement>document.getElementById("arms")).src.indexOf("loading") + 1) {
+				(<HTMLImageElement>document.getElementById("mouth")).src = "img/metan_mouth_loading.png";
 			}
 		}
 		const start = new Date().getTime() - audio.currentTime * 1000;
@@ -64,11 +64,12 @@ async function speak(audioQueryJson: string, audioRes: Response, text: string, s
 		audio.ontimeupdate = null;
 	}
 	(<HTMLElement>document.getElementById("message")).innerText = text;
-	(<HTMLImageElement>document.getElementById("arms")).src = "img/metan_arms_normal.png";
-	(<HTMLImageElement>document.getElementById("mouth")).style.removeProperty("display");
-	(<HTMLImageElement>document.getElementById("iris")).style.removeProperty("display");
-	if (eyes === "close") blink = setTimeout(closeEyes, Math.random() * 11000 + 4000);
-	changeEyes("white");
+	if (sendEvent) {
+		(<HTMLImageElement>document.getElementById("arms")).src = "img/metan_arms_normal.png";
+		(<HTMLImageElement>document.getElementById("mouth")).style.removeProperty("display");
+		if (eyes === "close") blink = setTimeout(closeEyes, Math.random() * 11000 + 4000);
+		changeEyes("open");
+	}
 	audio.play();
 }
 async function speak_file(fn: string, text: string) {
@@ -85,10 +86,8 @@ document.addEventListener("ready", () => {
 });
 document.addEventListener("predict", async (e: CustomEvent) => {
 	(<HTMLImageElement>document.getElementById("arms")).src = "img/metan_arms_loading.png";
-	(<HTMLImageElement>document.getElementById("mouth")).style.display = "none";
 	changeEyes(Math.random() < .5 ? "close" : "lookup");
 	if (eyes === "close") clearTimeout(blink);
-	(<HTMLImageElement>document.getElementById("iris")).style.display = "none";
 	speak_file("please_wait", "少し待ってちょうだい。");
 	const albedoUrl = "data:image/webp;base64," + e.detail.albedo;
 	const normalUrl = "data:image/webp;base64," + e.detail.normal;
@@ -220,5 +219,5 @@ document.addEventListener("failure", () => {
 let eyes: Eyes;
 let showQr: boolean = false;
 let showError: boolean = false;
-changeEyes("white");
+changeEyes("open");
 let blink = setTimeout(closeEyes, Math.random() * 11000 + 4000);
