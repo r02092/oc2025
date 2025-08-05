@@ -1107,7 +1107,13 @@
          result="comp2"
          operator="over"
          in="fbSourceGraphic"
-         in2="comp1" /></filter></defs><g
+         in2="comp1" /></filter></defs><rect
+     style="fill:#ffffff;stroke-width:5.82083;stroke-linecap:square"
+     id="rect1"
+     x="0"
+     y="0"
+     width="297"
+     height="210" /><g
      id="layer1"><rect
        style="fill:#edb5df;fill-opacity:1;stroke:#4b3638;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
        id="rect41"
