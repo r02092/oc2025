@@ -39,6 +39,8 @@ def main():
 	lut = (np.arange(256) / 255) ** 2.2 * 255
 	dotenv.load_dotenv()
 	failure = False
+	light = np.load("light.npy")
+	light_t = light.T
 	driver.execute_script("document.dispatchEvent(new CustomEvent('ready'))")
 	while True:
 		if failure:
@@ -69,9 +71,7 @@ def main():
 		imgs[1] *= imgs_sum / np.sum(imgs[1]) / 3
 		imgs[2] *= imgs_sum / np.sum(imgs[2]) / 3
 		cv2.imwrite("out/imgs0.png", imgs[0].astype(np.uint8))
-		light = np.load("light.npy")
-		lightT = light.T
-		g = np.tensordot(imgs.transpose(1, 2, 0, 3), (np.linalg.inv(lightT @ light) @ lightT).T, axes=(2, 0))
+		g = np.tensordot(imgs.transpose(1, 2, 0, 3), (np.linalg.inv(light_t @ light) @ light_t).T, axes=(2, 0))
 		img_albedo = np.linalg.norm(g, axis=3)
 		g_gray = g[:, :, 0] * .0722 + g[:, :, 1] * .7152 + g[:, :, 2] * .2126
 		g_norm = np.linalg.norm(g_gray, axis=2)
