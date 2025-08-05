@@ -1,0 +1,53 @@
+\documentclass[tikz]{standalone}
+\usepackage{luatexja-fontspec,tikz}
+\setmainfont{ClarimoUDPE}
+\setmainjfont{APOTFUDShinGoPr6N}[CharacterWidth=Proportional,Kerning=On,Script=Default,YokoFeatures={JFM=prop}]
+\usetikzlibrary{arrows.meta}
+\begin{document}
+	\begin{tikzpicture}
+		\node(key)at(0,0)[draw]{キーボード};
+		\node(mouse)at(0,-2)[draw]{マウス};
+		\node(av)at(0,-4)[draw]{映像・音声};
+		\draw(3.5,-.5)rectangle(10.5,-8.5);
+		\node(pc)at(3.6,-.5)[fill=white,right]{PC};
+		\node(gc)at(5,-2)[draw,align=center]{Google\\Chrome};
+		\node(ollama)at(9,-1)[draw]{Ollama};
+		\node(vve)at(9,-3)[draw,align=center]{VOICEVOX\\ENGINE};
+		\node(camera)at(0,-6)[draw]{カメラ};
+		\node(led)at(-.3,-8)[draw]{LED};
+		\node(t3)at(.5,-8){×3};
+		\node(arduino)at(0,-9)[draw]{Arduino};
+		\draw(4,-5)rectangle(8,-8);
+		\node(pc)at(4.1,-5)[fill=white,right]{main.py};
+		\node(main)at(5,-7.5)[draw]{main()};
+		\node(http)at(6,-6)[draw]{HTTPサーバー};
+		\node(web)at(13,-7.5)[draw]{大学ウェブサーバー};
+		\node(user)at(13,-5.5)[draw]{ユーザー端末};
+		\coordinate[yshift=2](gcwh)at(gc.west){};
+		\coordinate[yshift=-2](gcwl)at(gc.west){};
+		\coordinate[yshift=1](gceh)at(gc.east){};
+		\coordinate[yshift=-1](gcel)at(gc.east){};
+		\coordinate[xshift=-1](gcsl)at(gc.south){};
+		\coordinate[xshift=1](gcsr)at(gc.south){};
+		\coordinate[xshift=-1](mainnl)at(main.north){};
+		\coordinate[xshift=1](mainnr)at(main.north){};
+		\coordinate[yshift=1](mainwh)at(main.west){};
+		\coordinate[yshift=-1](mainwl)at(main.west){};
+		\coordinate[yshift=1](maineh)at(main.east){};
+		\coordinate[yshift=-1](mainel)at(main.east){};
+		\draw[-Stealth](key.east)--node[fill=black,text=white,pos=.4]{\footnotesize JavaScript}(gcwh);
+		\draw[-Stealth](mouse.east)--node[fill=black,text=white,pos=.4]{\footnotesize JavaScript}(gc.west);
+		\draw[-Stealth](gcwl)--(av.east);
+		\draw[Stealth-Stealth](gceh)--node[fill=black,text=white]{\footnotesize HTTP}(ollama.west);
+		\draw[Stealth-Stealth](gcel)--node[fill=black,text=white]{\footnotesize HTTP}(vve.west);
+		\draw[-Stealth](camera.east)--node[fill=black,text=white,align=center,pos=.4]{\footnotesize OpenCV\\\footnotesize VideoCapture}(mainwh);
+		\draw[-Stealth](arduino.north)--(led.south);
+		\draw[-Stealth](mainwl)--node[fill=black,text=white,pos=.6]{\footnotesize シリアル通信}(arduino.east);
+		\draw[-Stealth](mainnl)to[bend left=60]node[fill=black,text=white,pos=.85]{\footnotesize Selenium}(gcsl);
+		\draw[-Stealth](gcsr)to[bend left=20]node[fill=black,text=white]{\footnotesize HTTP}(http.north);
+		\draw[-Stealth](http.south)--node[fill=black,text=white]{\footnotesize queue}(mainnr);
+		\draw[-Stealth](maineh)to[bend right=45]node[fill=black,text=white,pos=.8]{\footnotesize subprocess}(vve.south);
+		\draw[-Stealth](mainel)--node[fill=black,text=white,pos=.6]{\footnotesize FTP}(web.west);
+		\draw[-Stealth](web.north)--node[fill=black,text=white]{\footnotesize HTTP}(user.south);
+	\end{tikzpicture}
+\end{document}

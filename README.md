@@ -8,7 +8,7 @@
 
 ![説明用文書](https://raw.githubusercontent.com/r02092/oc2025/main/materials/print-outline.svg)
 ## 使用するソフト・言語・ライブラリなど
-![構成図](https://raw.githubusercontent.com/r02092/oc2025/main/materials/kosei.png)
+![構成図](https://raw.githubusercontent.com/r02092/oc2025/main/materials/kosei.svg)
 - Arduino
 - Google Chrome
   - CSS
